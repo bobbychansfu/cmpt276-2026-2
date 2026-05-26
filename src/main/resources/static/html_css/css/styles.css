@@ -205,3 +205,32 @@ input[type="radio"] {
     .demo-wiggle { animation: none; }
     nav a { transition: none; }
 } 
+/* ─ for Appendix C - JavaScript */
+.js-demo-box {
+    padding: .75rem 1rem;
+    border: var(--border);
+    border-radius: .75rem;
+    margin: .75rem 0;
+    background: Canvas;
+}
+
+.js-color-box {
+    margin-top: .75rem;
+    padding: .75rem 1rem;
+    border-radius: .5rem;
+    border: var(--border);
+    min-height: 2.5rem;
+    transition: background-color 300ms ease;
+    font-weight: 600;
+}
+
+.user-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.user-card img {
+    border-radius: 50%;
+    border: var(--border);
+}
