@@ -54,6 +54,7 @@
         <li><a href="#table">Tables</a></li>
         <li><a href="#forms">Forms</a></li>
         <li><a href="#microformats">Microformats</a></li>
+        <li><a href="#javascript">JavaScript</a></li>
       </ul>
     </nav>
   </header>
@@ -567,6 +568,30 @@ POST /process.php
       </div>
     </section>
 
+    <!-- 
+         JavaScript Demo
+     -->
+    <section id="javascript">
+      <h2>JavaScript</h2>
+
+      <div class="js-demo-box">
+        <button id="js-click-btn" class="btn btn-primary">Click me!</button>
+        <p id="js-click-output" class="note">The button has not been clicked yet.</p>
+      </div>
+
+      <div class="js-demo-box">
+        <label for="js-input">Type something:</label><br />
+        <input id="js-input" type="text" placeholder="Type here..." />
+        <p id="js-input-output" class="note">You haven't typed anything yet.</p>
+      </div>
+
+      <div class="js-demo-box" id="js-user">
+        <button id="js-load-btn" class="btn btn-secondary">Load User Data</button>
+        <p id="js-user-output" class="note">User data not loaded.</p>
+      </div>
+
+    </section>
+
   </main>
 
   <footer>
@@ -579,5 +604,6 @@ POST /process.php
       <a href="#top">Back to top</a>
     </p>
   </footer>
+  <script src="./js/demo.js"></script>
 </body>
 </html>
