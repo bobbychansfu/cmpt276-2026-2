@@ -9,14 +9,11 @@ public class GameDemo {
         System.out.println(sarah.getName() + " has " + sarah.getHealth() + " health.");
         System.out.println(steve.getName() + " has " + steve.getHealth() + " health.");
 
-        try {
-            sarah.attack();
-            steve.attack();
-            sarah.attack();
+        sarah.attack();
+        steve.attack();
+        sarah.attack();
 
-            steve.attack(); // This will throw an exception since the weapon is out of charges
-        } catch (Exception e) {
-            System.out.println("Game over: " + e.getMessage());
-        }
+        steve.attack(); // This will throw an exception since the weapon is out of charges
+
     }
 }
