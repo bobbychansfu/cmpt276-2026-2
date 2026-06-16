@@ -17,11 +17,8 @@ import com.example.demo.models.UsersRepository;
 public class UsersController {
     private List<User> users = new ArrayList<>();
 
-    private final UsersRepository usersRepository;
-
-    public UsersController(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
+    @Autowired
+    private UsersRepository usersRepository;
 
     // methods...
 
