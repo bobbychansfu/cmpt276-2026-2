@@ -1,6 +1,5 @@
 package com.example.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.models.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.models.UsersRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsersController {
@@ -37,5 +41,73 @@ public class UsersController {
         newUser.setPassword(password);
         usersRepository.save(newUser);
         return "redirect:/users/show";
+    }
+
+    // login and logout methods...
+
+    @GetMapping("/login")
+    public String getLogin(Model model, HttpServletRequest request, HttpSession session, HttpServletResponse response){
+        User user = (User) session.getAttribute("session_user");
+        if (user == null){
+            return "users/login";
+        }
+        else {
+            // Prevent caching
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Expires", "0");
+            
+            model.addAttribute("user",user);
+            return "users/protected";
+        }
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam Map<String,String> formData, Model model, HttpServletRequest request, HttpSession session, HttpServletResponse response){
+        // processing login
+        String name = formData.get("name");
+        String password = formData.get("password");
+        List<User> userlist = usersRepository.findByNameAndPassword(name, password);
+        if (userlist.isEmpty()){
+            return "users/login";
+        }
+        else {
+            // success
+            User user = userlist.get(0);
+            request.getSession().setAttribute("session_user", user);
+            
+            // Prevent caching of protected pages
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Expires", "0");
+            
+            model.addAttribute("user", user);
+            return "users/protected";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String destroySession(HttpServletRequest request, HttpServletResponse response){
+        // Prevent caching of pages
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+        
+        // destroy the session
+        request.getSession().invalidate();
+        return "redirect:/login";
+    }
+
+    @GetMapping("/protected_page")
+    public String getMethodName(HttpServletRequest request, HttpServletResponse response, Model model) {
+        // check logged in status, if not logged in, redirect to login page
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("session_user") == null) {
+            return "redirect:/login";
+        }
+        // get user info from session and pass to the protected page
+        User user = (User) session.getAttribute("session_user");
+        model.addAttribute("user", user);
+        return "users/protected";
     }
 }

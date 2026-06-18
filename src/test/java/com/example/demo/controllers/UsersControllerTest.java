@@ -31,7 +31,7 @@ public class UsersControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        usersController = new UsersController();
+        usersController = new UsersController(usersRepository);
         ReflectionTestUtils.setField(usersController, "usersRepository", usersRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(usersController).build();
     }
