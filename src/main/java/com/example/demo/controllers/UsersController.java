@@ -21,8 +21,11 @@ import jakarta.servlet.http.HttpSession;
 public class UsersController {
     private List<User> users = new ArrayList<>();
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
+
+    public UsersController(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
 
     // methods...
 
