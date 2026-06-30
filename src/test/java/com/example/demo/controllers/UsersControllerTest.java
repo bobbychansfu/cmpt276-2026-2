@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -51,7 +52,8 @@ public class UsersControllerTest {
         User savedUser = userCaptor.getValue();
         org.junit.jupiter.api.Assertions.assertEquals("Alice", savedUser.getName());
         org.junit.jupiter.api.Assertions.assertEquals("alice@example.com", savedUser.getEmail());
-        org.junit.jupiter.api.Assertions.assertEquals("secret", savedUser.getPassword());
+        org.junit.jupiter.api.Assertions.assertNotEquals("secret", savedUser.getPassword());
+        org.junit.jupiter.api.Assertions.assertTrue(new BCryptPasswordEncoder().matches("secret", savedUser.getPassword()));
     }
 
     @Test

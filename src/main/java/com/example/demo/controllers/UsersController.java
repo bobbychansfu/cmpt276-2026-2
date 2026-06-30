@@ -2,6 +2,8 @@ package com.example.demo.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class UsersController {
     private List<User> users = new ArrayList<>();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UsersRepository usersRepository;
 
@@ -41,7 +44,10 @@ public class UsersController {
         User newUser = new User();
         newUser.setName(name);
         newUser.setEmail(email);
-        newUser.setPassword(password);
+
+        // hash the password before saving it to the database
+        final String hashedPassword = passwordEncoder.encode(password);
+        newUser.setPassword(hashedPassword);
         usersRepository.save(newUser);
         return "redirect:/users/show";
     }
@@ -70,13 +76,16 @@ public class UsersController {
         // processing login
         String name = formData.get("name");
         String password = formData.get("password");
-        List<User> userlist = usersRepository.findByNameAndPassword(name, password);
+        List<User> userlist = usersRepository.findByName(name);
         if (userlist.isEmpty()){
+            return "users/login";
+        }
+        User user = userlist.get(0);
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             return "users/login";
         }
         else {
             // success
-            User user = userlist.get(0);
             request.getSession().setAttribute("session_user", user);
             
             // Prevent caching of protected pages
